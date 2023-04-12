@@ -1,0 +1,36 @@
+- name: github choice
+  hosts: clone
+  gather_facts: no
+
+  tasks:
+  - name: choice
+    pause:
+      prompt: "Which script do you want? 1-Wordpress 2-Ansible 3-Zabbix"
+    register: user_choice
+
+  - name: Run wordpress
+    copy:
+      src: /etc/master/wordpress.sh
+      dest: /home/master/
+      mode: 777
+  - name: start
+    command: bash wordpress.sh
+    when: user_choice.user_input == "1"
+
+  - name: Run ansible
+    copy:
+      src: /etc/master/ansible.sh
+      dest: /home/master/
+      mode: 777
+  - name: start
+    command: bash /home/master/ansible.sh
+    when: user_choice.user_input == "2"
+
+  - name: Run zabbix
+    copy:
+      src: /etc/ansible/zabbix.sh
+      dest: /home/master/
+      mode: 777
+  - name: start
+    command: bash /home/master/zabbix.sh
+    when: user_choice.user_input == "3"
